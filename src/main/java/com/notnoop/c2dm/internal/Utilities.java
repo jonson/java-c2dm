@@ -42,7 +42,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import com.notnoop.c2dm.C2DMDelegate;
-import com.notnoop.c2dm.C2DMNotification;
+import com.notnoop.c2dm.C2DMDeviceNotification;
 import com.notnoop.c2dm.C2DMResponse;
 import com.notnoop.c2dm.exceptions.RuntimeIOException;
 
@@ -68,17 +68,17 @@ public final class Utilities {
         return cm;
     }
 
-    public static List<NameValuePair> requestBodyOf(String registrationId, C2DMNotification notify) {
+    public static List<NameValuePair> requestBodyOf(C2DMDeviceNotification notify) {
         List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 
-        pairs.add(new BasicNameValuePair("registration_id", registrationId));
-        pairs.add(new BasicNameValuePair("collapse_key", notify.getCollapseKey()));
+        pairs.add(new BasicNameValuePair("registration_id", notify.getRegistrationId()));
+        pairs.add(new BasicNameValuePair("collapse_key", notify.getNotification().getCollapseKey()));
 
-        if (notify.isDelayWhileIdle()) {
+        if (notify.getNotification().isDelayWhileIdle()) {
             pairs.add(new BasicNameValuePair("delay_while_idle", "1"));
         }
 
-        for (Map.Entry<String, String> data: notify.getData()) {
+        for (Map.Entry<String, String> data: notify.getNotification().getData()) {
             pairs.add(new BasicNameValuePair(data.getKey(), data.getValue()));
         }
 
@@ -87,7 +87,7 @@ public final class Utilities {
 
     private static final String UPDATE_CLIENT_AUTH = "Update-Client-Auth";
 
-    public static void fireDelegate(C2DMNotification message,
+    public static void fireDelegate(C2DMDeviceNotification message,
             HttpResponse response, C2DMDelegate delegate, AbstractC2DMService service) {
         if (delegate == null) {
             return;

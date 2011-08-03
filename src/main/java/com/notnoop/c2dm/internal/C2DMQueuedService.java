@@ -36,23 +36,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.http.client.methods.HttpPost;
 
-import com.notnoop.c2dm.C2DMNotification;
+import com.notnoop.c2dm.C2DMDeviceNotification;
 import com.notnoop.c2dm.C2DMService;
 
 public class C2DMQueuedService extends AbstractC2DMService implements C2DMService {
 
     private AbstractC2DMService service;
-    private BlockingQueue<Pair<HttpPost, C2DMNotification>> queue;
+    private BlockingQueue<Pair<HttpPost, C2DMDeviceNotification>> queue;
     private AtomicBoolean started = new AtomicBoolean(false);
 
     public C2DMQueuedService(AbstractC2DMService service, String serviceUri, String authToken) {
         super(serviceUri, authToken);
         this.service = service;
-        this.queue = new LinkedBlockingQueue<Pair<HttpPost, C2DMNotification>>();
+        this.queue = new LinkedBlockingQueue<Pair<HttpPost, C2DMDeviceNotification>>();
     }
 
     @Override
-    protected void push(final HttpPost request, C2DMNotification message) {
+    protected void push(final HttpPost request, C2DMDeviceNotification message) {
         if (!started.get()) {
             throw new IllegalStateException("Service hans't been started or was closed");
         }
@@ -75,7 +75,7 @@ public class C2DMQueuedService extends AbstractC2DMService implements C2DMServic
             public void run() {
                 while (shouldContinue) {
                     try {
-                        Pair<HttpPost, C2DMNotification> post = queue.take();
+                        Pair<HttpPost, C2DMDeviceNotification> post = queue.take();
                         service.push(post.getKey(), post.getValue());
                     } catch (InterruptedException e) {}
                 }

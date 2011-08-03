@@ -38,7 +38,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.util.EntityUtils;
 
 import com.notnoop.c2dm.C2DMDelegate;
-import com.notnoop.c2dm.C2DMNotification;
+import com.notnoop.c2dm.C2DMDeviceNotification;
 import com.notnoop.c2dm.C2DMService;
 
 public class C2DMPooledService extends AbstractC2DMService implements C2DMService {
@@ -54,7 +54,7 @@ public class C2DMPooledService extends AbstractC2DMService implements C2DMServic
     }
 
     @Override
-    protected void push(final HttpPost request, final C2DMNotification message) {
+    protected void push(final HttpPost request, final C2DMDeviceNotification message) {
         executor.execute(new Runnable() {
             public void run() {
                 try {

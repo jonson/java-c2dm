@@ -66,7 +66,7 @@ public interface C2DMService {
      * @throws NetworkIOException if a network error occured while
      *      attempting to send the message
      */
-    void push(String registrationId, C2DMNotification message)
+    void push(C2DMDeviceNotification notification)
         throws NetworkIOException;
 
     /**

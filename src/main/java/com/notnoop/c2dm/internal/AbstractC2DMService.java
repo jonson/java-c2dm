@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 
-import com.notnoop.c2dm.C2DMNotification;
+import com.notnoop.c2dm.C2DMDeviceNotification;
 import com.notnoop.c2dm.C2DMService;
 import com.notnoop.c2dm.exceptions.NetworkIOException;
 
@@ -49,11 +49,11 @@ public abstract class AbstractC2DMService implements C2DMService {
         this.authToken = new AtomicReference<String>(authToken);
     }
 
-    protected HttpPost postMessage(String registrationId, C2DMNotification notification) {
+    protected HttpPost postMessage(C2DMDeviceNotification notification) {
         HttpPost method = new HttpPost(serviceUri);
         try {
             method.setEntity(new UrlEncodedFormEntity(
-                    Utilities.requestBodyOf(registrationId, notification),
+                    Utilities.requestBodyOf(notification),
                     "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             throw new AssertionError("No UTF-8! It's Doom Day!");
@@ -64,16 +64,16 @@ public abstract class AbstractC2DMService implements C2DMService {
         return method;
     }
 
-    protected abstract void push(HttpPost request, C2DMNotification message);
+    protected abstract void push(HttpPost request, C2DMDeviceNotification message);
 
     public void push(String registrationId, String payload)
             throws NetworkIOException {
         throw new RuntimeException("Not implemented yet");
     }
 
-    public void push(String registrationId, C2DMNotification message)
+    public void push(C2DMDeviceNotification notification)
             throws NetworkIOException {
-        this.push(postMessage(registrationId, message), message);
+        this.push(postMessage(notification), notification);
     }
 
     public void start() {}
