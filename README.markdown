@@ -1,6 +1,6 @@
 java-c2dm is a Java client for Google Cloud to Device Messaging (C2DM)
-The library aims to provide a highly scalable interface to the Apple
-server, while still being simple and modular.
+The library aims to provide a highly scalable interface to the C2DM
+service, while still being simple and modular.
 
 The interface aims to require very minimal code to achieve the most common
 cases, but have it be reconfigurable so you can even use your own networking
